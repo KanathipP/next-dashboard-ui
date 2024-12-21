@@ -4,7 +4,7 @@ import React from "react";
 import Menu from "@/components/Menu"
 import Navbar from "@/components/Navbar";
 
-const DashboradLayout = ({
+const DashboardLayout = ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
   return (
@@ -26,4 +26,4 @@ const DashboradLayout = ({
   );
 };
 
-export default DashboradLayout;
+export default DashboardLayout;
