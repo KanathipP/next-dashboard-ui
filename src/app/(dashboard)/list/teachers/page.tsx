@@ -46,6 +46,7 @@ const columns = [
     accessor: "actions",
   },
 ];
+
 const renderRow = (item: TeacherList) => (
   <tr
     key={item.id}
@@ -102,19 +103,24 @@ const TeacherListPage = async ({
 
   // URL PARAMS CONDITION
 
-  const query: Prisma.TeacherWhereInput = {}
+  const query: Prisma.TeacherWhereInput = {};
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "classId": {
+          case "classId":
             query.lessons = {
               some: {
                 classId: parseInt(value),
-              }
-            }
-          }
+              },
+            };
+            break;
+          case "search":
+            query.name = {
+              contains: value,
+              mode: "insensitive",
+            };
         }
       }
     }
@@ -129,7 +135,7 @@ const TeacherListPage = async ({
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.teacher.count({where:query}),
+    prisma.teacher.count({ where: query }),
   ]);
 
   console.log(p);
