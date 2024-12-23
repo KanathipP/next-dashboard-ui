@@ -77,6 +77,7 @@ const ClassListPage = async ({
           case "supervisorId":
             query.supervisorId = value
             break;
+            
           case "search":
             query.name = {
               contains: value,

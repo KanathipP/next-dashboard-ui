@@ -38,7 +38,9 @@ const renderRow = (item: LessonList) => (
   >
     <td className="flex items-center gap-4 p-4">{item.name}</td>
     <td>{item.class.name}</td>
-    <td className="hidden md:table-cell">{item.teacher.name}</td>
+    <td className="hidden md:table-cell">
+      {item.teacher.name + " " + item.teacher.surname}
+    </td>
     <td>
       <div className="flex items-center gap-2">
         {role === "admin" && (
@@ -72,11 +74,14 @@ const LessonListPage = async ({
           case "teacherId":
             query.teacherId = value;
             break;
+          case "classId":
+            query.classId = parseInt(value);
+            break;
           case "search":
-            query.name = {
-              contains: value,
-              mode: "insensitive",
-            };
+            query.OR = [
+              { subject: { name: { contains: value, mode: "insensitive" } } },
+              { teacher: { name: { contains: value, mode: "insensitive" } } },
+            ];
             break;
           default:
             break;
@@ -89,14 +94,17 @@ const LessonListPage = async ({
     prisma.lesson.findMany({
       where: query,
       include: {
-        class: true,
-        teacher: true,
+        subject: { select: { name: true } },
+        class: { select: { name: true } },
+        teacher: { select: { name: true, surname: true } },
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.lesson.count({ where: query }),
   ]);
+
+  // console.log(data);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
