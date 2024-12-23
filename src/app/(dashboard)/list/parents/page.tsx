@@ -98,6 +98,7 @@ const ParentListPage = async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.parent.findMany({
+      where: query,
       include: {
         students: true,
       },

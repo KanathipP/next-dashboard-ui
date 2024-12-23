@@ -9,7 +9,7 @@ import { Class, Prisma, Student } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-type StudentList = Student & {class:Class}
+type StudentList = Student & { class: Class };
 
 const columns = [
   {
@@ -112,6 +112,9 @@ const StudentListPage = async ({
               contains: value,
               mode: "insensitive",
             };
+            break;
+          default:
+            break;
         }
       }
     }
@@ -119,6 +122,7 @@ const StudentListPage = async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.student.findMany({
+      where: query,
       include: {
         class: true,
       },
@@ -127,8 +131,6 @@ const StudentListPage = async ({
     }),
     prisma.student.count({ where: query }),
   ]);
-
-  console.log(data)
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
